@@ -1,0 +1,25 @@
+version: "3.8"
+services:
+  app:
+    container_name: ximea
+    build:
+      context: ./
+      dockerfile: ./Dockerfile
+      target: development
+    volumes:
+      #      - ../:/app
+      #      - /absolute/path/on/remote/machine:/workspace:cached
+      - /home/avl/Repositories:/workspace:cached
+      #- /home/avl/Repositories/XIMEA_Linux_SP.tgz:/XIMEA_Linux_SP.tgz:cached
+      # - $HOME/.Xauthority:/root/.Xauthority
+      # - /tmp/.X11-unix:/tmp/.X11-unix
+      - /tmp/zmq:/tmp/zmq # for inter container communication via ZeroMQ
+    devices:
+      - "/dev/bus/usb:/dev/bus/usb"
+    # environment:
+    #   - DISPLAY=:$DISPLAY
+    tty: true
+    network_mode: "docker_shared"
+    expose:
+      - "8221"
+    command: /bin/sh -c "while sleep 1000; do :; done"
