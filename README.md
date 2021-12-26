@@ -6,6 +6,15 @@ The templates is configured to mount a remote local folder in the remote host ma
 
 <img src="./doc/overview.png" width="480">
 
+A list of the templates: 
+* `./docker_glfw`
+   * OpenGL + GLFW
+   * Base: python:3.9.7-slim
+   * Display variable is set to host machine's display
+* `./docker_ximea`
+   * Ximea camera support
+   * Base: python:3.9.7-slim
+
 ## Requirement
 
 * Visual Studio Code
