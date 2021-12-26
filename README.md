@@ -4,7 +4,7 @@ Templates for some docker configurations with vscode remote containers.
 Our typical use case is to launch a container running on a remote host while using vscode locally to esit the source code in the host machine.
 The templates is configured to mount a remote local folder in the remote host machine.
 
-<img src="./doc/overview.png" width="640">
+<img src="./doc/overview.png" width="480">
 
 ## Requirement
 
