@@ -1,0 +1,26 @@
+version: "3.8"
+services:
+  app:
+    container_name: gl_imshow
+    build:
+      context: ./
+      dockerfile: ./Dockerfile
+      target: development
+    volumes:
+      #      - ../:/app
+      #      - /absolute/path/on/remote/machine:/workspace:cached
+      - /home/avl/Repositories:/workspace:cached
+      - $HOME/.Xauthority:/root/.Xauthority
+      - /tmp/.X11-unix:/tmp/.X11-unix
+      - /tmp/zmq:/tmp/zmq # for inter container communication via ZeroMQ
+    # devices:
+    #   - "/dev/bus/usb:/dev/bus/usb"
+    environment:
+      - DISPLAY=:$DISPLAY
+    tty: true
+    network_mode: "docker_shared"
+    expose:
+      - "8221"
+    # Overrides default command so things don't shut down after the process ends.
+    command: /bin/sh -c "while sleep 1000; do :; done"
+    #user: "${UID}:${GID}"
