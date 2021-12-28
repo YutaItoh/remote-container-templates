@@ -6,22 +6,24 @@ services:
       context: ./
       dockerfile: ./Dockerfile
       target: development
+      args:
+        - USERNAME=${CONTAINER_USER}
     volumes:
       # Host workspace
-      - /home/avl/Repositories:/workspace:cached
+      - type: bind
+        source: ${HOST_WORKSPACE}
+        target: ${CONTAINER_WORKSPACE}
+        consistency: cached
       # X11 settings
-      - $HOME/.Xauthority:/root/.Xauthority
+      - /${HOME}/.Xauthority:/home/${CONTAINER_USER}/.Xauthority
       - /tmp/.X11-unix:/tmp/.X11-unix
       # ZMQ socket
-      - /tmp/zmq:/tmp/zmq # for inter container communication via ZeroMQ
-    # devices:
-    #   - "/dev/bus/usb:/dev/bus/usb"
+      # for inter container communication via ZeroMQ
+      - /tmp/zmq:/tmp/zmq 
     environment:
       - DISPLAY=:$DISPLAY
+    user: ${CONTAINER_USER}
     tty: true
-    # network_mode: "docker_shared"
-    # expose:
-    #   - "8221"
     # Overrides default command so things don't shut down after the process ends.
     command: /bin/sh -c "while sleep 1000; do :; done"
     #user: "${UID}:${GID}"
