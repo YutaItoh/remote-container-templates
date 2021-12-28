@@ -1,0 +1,25 @@
+version: "3.8"
+services:
+  app:
+    container_name: base
+    build:
+      context: ./
+      dockerfile: ./Dockerfile
+      target: development
+      args:
+        - USERNAME=${CONTAINER_USER}
+    volumes:
+      # Host workspace
+      - type: bind
+        source: ${HOST_WORKSPACE}
+        target: ${CONTAINER_WORKSPACE}
+        consistency: cached
+    #      - /home/avl/Repositories:/workspace:cached
+    # environment:
+    #   # must be identical with the "user:" name
+    #   - DOCKER_USER=vscode
+    user: ${CONTAINER_USER}
+    tty: true
+    # Overrides default command so things don't shut down after the process ends.
+    command: /bin/sh -c "while sleep 1000; do :; done"
+    #user: "${UID}:${GID}"
