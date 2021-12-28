@@ -48,9 +48,8 @@ Example:
 
 ### Step 3: Configure .env file's variables
 We make a remote host's folder accessible from the container.
-Open `.devcontainer/.env`, and configure variables to be compatible with your remote machine's variables:
 
-The current hardcoding requirement in `.env` is due to the limitation in the vscode remote container extention where `docker-compose` is called in the local machine instead of inside the remote host machine.
+Open `.devcontainer/.env`, and configure variables to be compatible with your remote machine's variables:
 
 Example:
 ```bash
@@ -62,6 +61,9 @@ HOST_WORKSPACE="/your/host/machine/workspace:"
 With this setting, the pipeline will perform the following:
 * creates a local user `username` in the image
 * mounts `/your/host/machine/workspace` in the remote host machine to `/workspace` in the container when launching.
+
+*NOTE*: The current hardcoding requirement in `.env` is due to the limitation in the vscode remote container extention where `docker-compose` is called in the local machine instead of inside the remote host machine.
+
 
 ### Step 4: Build and Open the container
 
