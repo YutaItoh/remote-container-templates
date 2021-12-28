@@ -7,13 +7,21 @@ The templates is configured to mount a remote local folder in the remote host ma
 <img src="./doc/overview.png" width="480">
 
 A list of the templates: 
+* `./docker_base`
+  * A basic remote container template
+  * Base image: python:3.9.7-slim
 * `./docker_glfw`
-   * OpenGL + GLFW
-   * Base: python:3.9.7-slim
-   * Display variable is set to host machine's display
+  * A graphics library support (OpenGL + GLFW)
+  * Base image: python:3.9.7-slim
+  * Display variable is set to host machine's display
+* `./docker_pytorch`)
+  * A GPU-accelerated pytorch environment for a host mahine with CUDA-nabled NVIDIA GPUs.
+  * Base image: nvcr.io/nvidia/pytorch:21.10-py3 from [NVIDIA GPU Cloud](https://ngc.nvidia.com/catalog/containers/nvidia:pytorch)
 * `./docker_ximea`
-   * Ximea camera support
-   * Base: python:3.9.7-slim
+  * A Ximea camera-supported image.
+  * Base image: python:3.9.7-slim
+  * This image downloads [Ximea Linux Software Package](https://www.ximea.com/support/wiki/apis/ximea_linux_software_package) at the build time.
+  * The container currently mounts the entire `/dev/bus/usb` of the host machine
 
 ## Requirement
 
@@ -38,19 +46,22 @@ Example:
 }
 ```
 
-### Step 3: Configure docker-compose file's volume setting
+### Step 3: Configure .env file's variables
 We make a remote host's folder accessible from the container.
-Open `.devcontainer/docker-compose.development.yml`, and configure your remote machine's folder:
+Open `.devcontainer/.env`, and configure variables to be compatible with your remote machine's variables:
+
+The current hardcoding requirement in `.env` is due to the limitation in the vscode remote container extention where `docker-compose` is called in the local machine instead of inside the remote host machine.
 
 Example:
-```yml
-{
-    volumes:
-      - /your/host/machine's/folder:/workspace:cached
-}
+```bash
+CONTAINER_USER="username"
+CONTAINER_WORKSPACE="/workspace"
+HOST_WORKSPACE="/your/host/machine/workspace:"
 ```
 
-This mounts `/your/host/machine's/folder` in the remote host machine to `/workspace` in the container.
+With this setting, the pipeline will perform the following:
+* creates a local user `username` in the image
+* mounts `/your/host/machine/workspace` in the remote host machine to `/workspace` in the container when launching.
 
 ### Step 4: Build and Open the container
 
