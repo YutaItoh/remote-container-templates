@@ -1,8 +1,8 @@
 # Remore container templates with VScode
 Templates for some docker configurations with vscode remote containers.
 
-Our typical use case is to launch a container running on a remote host while using vscode locally to esit the source code in the host machine.
-The templates is configured to mount a remote local folder in the remote host machine.
+Our typical use case is to launch a container running on a remote host while using vscode locally to edit the source code in the host machine.
+The templates are configured to mount a remote local folder in the remote host machine.
 
 <img src="./doc/overview.png" width="480">
 
@@ -34,10 +34,10 @@ A list of the templates:
 ## How to use
 
 ### Step 1: Choose a template project
-* Choose one of the template projects and open the folder in vscode.
+* Choose one of the template projects and open the folder in the vscode editor.
 
 ### Step 2: Configure a remote host
-Create a setting file in a template project, `.vscode/settings.json`, and specify your remote machine:
+Create a setting file, `.vscode/settings.json`,  in the template project and specify your remote machine:
 
 Example:
 ```json
@@ -62,9 +62,9 @@ With this setting, the pipeline will perform the following:
 * creates a local user `username` in the image
 * mounts `/your/host/machine/workspace` in the remote host machine to `/workspace` in the container when launching.
 
-*NOTE*: The current hardcoding requirement in `.env` is due to the limitation in the vscode remote container extention where `docker-compose` is called in the local machine instead of inside the remote host machine.
+*NOTE*: The current hard-code requirement in `.env` is due to the limitation in the vscode remote container extension where `docker-compose` is called in the local machine environment instead of inside the remote host machine.
 
 
 ### Step 4: Build and Open the container
 
-In vscode, Press `F1` and chooe `Remote-Containers: Rebuild and Reopen in Container`
+In the vscode editor, press `F1` and choose `Remote-Containers: Rebuild and Reopen in Container`
