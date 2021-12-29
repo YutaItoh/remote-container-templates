@@ -21,7 +21,7 @@ services:
       # for inter container communication via ZeroMQ
       - /tmp/zmq:/tmp/zmq 
     environment:
-      - DISPLAY=:$DISPLAY
+      - DISPLAY=$DISPLAY
     user: ${CONTAINER_USER}
     tty: true
     # Overrides default command so things don't shut down after the process ends.
