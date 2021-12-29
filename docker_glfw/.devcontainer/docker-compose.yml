@@ -14,9 +14,14 @@ services:
         source: ${HOST_WORKSPACE}
         target: ${CONTAINER_WORKSPACE}
         consistency: cached
+        
       # X11 settings
-      - /${HOME}/.Xauthority:/home/${CONTAINER_USER}/.Xauthority
-      - /tmp/.X11-unix:/tmp/.X11-unix
+      - type: bind
+        source: /home/${HOST_USER}/.Xauthority
+        target: /home/${CONTAINER_USER}/.Xauthority
+        read_only: true
+      - /tmp/.X11-unix:/tmp/.X11-unix:ro
+
       # ZMQ socket
       # for inter container communication via ZeroMQ
       - /tmp/zmq:/tmp/zmq 
