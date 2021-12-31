@@ -26,6 +26,8 @@ services:
       # for inter container communication via ZeroMQ
       - /tmp/zmq:/tmp/zmq 
     environment:
+      # We hard-code the X11 display delimiter ":" in here
+      # This workaround is because of unreliable behavior of docker-compose substituting ":" in docker-compose.yml from .env file
       - DISPLAY=:${DISPLAY}
     user: ${CONTAINER_USER}
     tty: true
