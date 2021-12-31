@@ -37,6 +37,8 @@ FROM python-base as development-base
     RUN poetry config experimental.new-installer false
     RUN poetry run pip install -U pip setuptools
     RUN poetry install
+    # https://pytorch.org/get-started/locally/
+    RUN pip3 install torch==1.10.1+cu113 torchvision==0.11.2+cu113 torchaudio==0.10.1+cu113 -f https://download.pytorch.org/whl/cu113/torch_stable.html
 
 FROM development-base as development
 
