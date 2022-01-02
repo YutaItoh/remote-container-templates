@@ -30,6 +30,10 @@ services:
       # This workaround is because of unreliable behavior of docker-compose substituting ":" in docker-compose.yml from .env file
       - DISPLAY=:${DISPLAY}
     user: ${CONTAINER_USER}
+
+    # Uncomment the following IPC option if one wants to connect docker_ximea container
+    # ipc: container:ximea
+
     tty: true
     # Overrides default command so things don't shut down after the process ends.
     command: /bin/sh -c "while sleep 1000; do :; done"
