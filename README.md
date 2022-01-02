@@ -1,4 +1,4 @@
-# Remore container templates with VScode
+# Remote container templates with VScode
 Templates for some docker configurations with vscode remote containers.
 
 Our typical use case is to launch a container running on a remote host while using vscode locally to edit the source code in the host machine.
