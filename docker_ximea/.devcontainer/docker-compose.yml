@@ -8,20 +8,27 @@ services:
       target: development
       args:
         - USERNAME=${CONTAINER_USER}
+        - SOCKET_DIR=${SOCKET_DIR} # for socket
     volumes:
       # Host workspace
       - type: bind
         source: ${HOST_WORKSPACE}
         target: ${CONTAINER_WORKSPACE}
         consistency: cached
-      # ZMQ socket
-      # for inter container communication via ZeroMQ
-      - /tmp/zmq:/tmp/zmq
+      # Soocket dir for inter container communication
+      - ${SOCKET_DIR}:${SOCKET_DIR} # for socket
     devices:
       - "/dev/bus/usb:/dev/bus/usb"
     user: ${CONTAINER_USER}
+    
     # IPC Mode sharable 
     ipc: shareable
+
     tty: true
+
     # Overrides default command so things don't shut down after the process ends.
-    command: /bin/sh -c "while sleep 1000; do :; done"
+    # We also change the owner of the host's tmp folder for socket communication
+    command: >
+      /bin/sh -c 
+      "sudo chown -R ${CONTAINER_USER}:${CONTAINER_USER} ${SOCKET_DIR};
+      while sleep 1000; do :; done"

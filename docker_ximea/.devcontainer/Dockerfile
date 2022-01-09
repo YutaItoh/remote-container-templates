@@ -6,8 +6,15 @@ ENV DEBIAN_FRONTEND=noninteractive
 
 FROM base as ximea-base
 
-#    ENV HOME="/home/root"
-    WORKDIR "/home/$USERNAME"
+    # USERNAME must be defined in docker-compose.yml
+    # e.g. 
+    # app:
+    #   - USERNAME=${CONTAINER_USER} 
+    # here ${CONTAINER_USER}  is supposed to be defined in .env
+    ARG USERNAME
+
+    ## Configuration for Ximea USB3.0 cameras
+    WORKDIR "/home/${USERNAME}"
     # Setup Ximea driver
     RUN apt-get update \
         && apt install -y \
@@ -28,7 +35,17 @@ FROM base as ximea-base
         cd ./package && ./install2
     RUN rm XIMEA_Linux_SP.tgz \
         && rm -rf ./package
-
+        
+    ## Configuration for Ximea USB3.0 cameras
+    ## https://www.ximea.com/support/wiki/apis/Linux_USB30_Support
+    RUN : && \
+        # Increase the USB Buffer Size in Linux
+        echo 'echo 0 > /sys/module/usbcore/parameters/usbfs_memory_mb' > /etc/rc.local &&\ 
+        # Allow to Run Application Realtime
+        echo '*               -       rtprio          0' >> /etc/security/limits.conf &&\ 
+        echo '@realtime       -       rtprio          81' >> /etc/security/limits.conf &&\ 
+        echo '*               -       nice            0' >> /etc/security/limits.conf &&\ 
+        echo '@realtime       -       nice           -16' >> /etc/security/limits.conf
 
 FROM ximea-base as python-base
     # Keeps Python from generating .pyc files in the container
@@ -71,25 +88,31 @@ FROM ximea-base as python-base
 
 
 FROM python-base as development
-    # [Option] Install zsh
+    ## [Option] Install zsh
     ARG INSTALL_ZSH="true"
-    # [Option] Upgrade OS packages to their latest versions
+    ## [Option] Upgrade OS packages to their latest versions
     ARG UPGRADE_PACKAGES="false"
-    # Install needed packages and setup non-root user. Use a separate RUN statement to add your own dependencies.
-    ARG USERNAME=vscode
+
+    ## Install needed packages and setup non-root user. Use a separate RUN statement to add your own dependencies.
+    ARG USERNAME
+    # USERNAME must be defined in docker-compose.yml
+    # e.g. 
+    # app:
+    #   - USERNAME=${CONTAINER_USER} 
+    # here ${CONTAINER_USER}  is supposed to be defined in .env
     ARG USER_UID=1000
     ARG USER_GID=$USER_UID
 
-    # Install needed packages and setup non-root user. Use a separate RUN statement to add your own dependencies.
+    ## Install needed packages and setup non-root user. Use a separate RUN statement to add your own dependencies.
     COPY library-scripts/common-debian.sh /tmp/library-scripts/
     RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
-        # Here add a user to plugdev for XIMEA camera
         && /bin/bash /tmp/library-scripts/common-debian.sh "${INSTALL_ZSH}" "${USERNAME}" "${USER_UID}" "${USER_GID}" "${UPGRADE_PACKAGES}" "true" "true" \
-        && gpasswd -a ${USERNAME} plugdev \
         && apt-get autoremove -y && apt-get clean -y && rm -rf /var/lib/apt/lists/* /tmp/library-scripts
     
-    #    WORKDIR /app
-    ENV HOME="/home/$USERNAME"
+    # For Ximea
+    RUN gpasswd -a ${USERNAME} plugdev
+
+    ENV HOME="/home/${USERNAME}"
     WORKDIR $HOME
 
 # FROM development-base as builder-base
