@@ -109,6 +109,11 @@ FROM gl-base as development
     ARG UPGRADE_PACKAGES="false"
     # Install needed packages and setup non-root user. Use a separate RUN statement to add your own dependencies.
     ARG USERNAME
+    # USERNAME must be defined in docker-compose.yml
+    # e.g. 
+    # app:
+    #   - USERNAME=${CONTAINER_USER} 
+    # here ${CONTAINER_USER}  is supposed to be defined in .env
     ARG USER_UID=1000
     ARG USER_GID=$USER_UID
 
